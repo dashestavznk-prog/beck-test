@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Шкала депресії Бека</title>
+  <style>
+    :root {
+      --powder-blue: #b2cee2;
+      --eggshell: #ecece5;
+      --key-lime: #d1d871;
+      --cerulean: #3a4f99;
+      --denim: #13233d;
+      --olympic-blue: #6299d0;
+      --white: #ffffff;
+      --soft-shadow: 0 18px 45px rgba(19, 35, 61, 0.12);
+      --radius-xl: 28px;
+      --radius-md: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: var(--eggshell);
+      color: var(--denim);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .app {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 28px;
+      margin-bottom: 24px;
+      border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+      background: linear-gradient(135deg, var(--denim), var(--cerulean));
+      color: var(--white);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .topbar-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.4fr 0.7fr;
+      gap: 24px;
+      align-items: stretch;
+      padding: 42px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, var(--powder-blue), #d9e9f4);
+      box-shadow: var(--soft-shadow);
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      max-width: 650px;
+      font-size: clamp(40px, 7vw, 82px);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero p {
+      max-width: 620px;
+      font-size: 20px;
+      margin-bottom: 22px;
+    }
+
+    .notice {
+      display: flex;
+      gap: 12px;
+      max-width: 680px;
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.48);
+      font-weight: 650;
+    }
+
+    .stat-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 32px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(145deg, var(--cerulean), #243f8f);
+      color: var(--white);
+      min-height: 260px;
+    }
+
+    .stat-number {
+      font-size: 76px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .stat-line {
+      height: 1px;
+      background: rgba(255,255,255,0.6);
+      margin: 4px 0 24px;
+    }
+
+    .primary-btn, .secondary-btn, .answer-btn {
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .primary-btn {
+      width: 100%;
+      padding: 24px 28px;
+      border-radius: 22px;
+      background: var(--key-lime);
+      color: var(--denim);
+      font-size: 24px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .primary-btn:hover, .secondary-btn:hover, .answer-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .section {
+      margin-top: 28px;
+      padding: 34px;
+      border-radius: var(--radius-xl);
+      background: rgba(255,255,255,0.64);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .section h2 {
+      font-size: 28px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .step {
+      min-height: 170px;
+      padding: 20px;
+      border-radius: 22px;
+      background: var(--powder-blue);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-weight: 750;
+    }
+
+    .step:nth-child(2) {
+      background: var(--key-lime);
+    }
+
+    .step:nth-child(3) {
+      background: var(--cerulean);
+      color: var(--white);
+    }
+
+    .step-number {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--denim);
+      color: var(--white);
+      font-weight: 900;
+    }
+
+    .test-screen, .result-screen {
+      display: none;
+      margin-top: 28px;
+    }
+
+    .test-card {
+      padding: 34px;
+      border-radius: var(--radius-xl);
+      background: var(--white);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .progress-wrap {
+      margin-bottom: 24px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-weight: 800;
+      color: var(--cerulean);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--powder-blue);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: var(--key-lime);
+      transition: width 0.3s ease;
+    }
+
+    .question-title {
+      font-size: clamp(24px, 4vw, 38px);
+      line-height: 1.12;
+      letter-spacing: -0.04em;
+      margin-bottom: 22px;
+    }
+
+    .answers {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      padding: 18px 20px;
+      border-radius: var(--radius-md);
+      background: var(--eggshell);
+      color: var(--denim);
+      font-size: 17px;
+      font-weight: 700;
+      border: 2px solid transparent;
+    }
+
+    .answer-btn.selected {
+      background: var(--powder-blue);
+      border-color: var(--cerulean);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 14px;
+    }
+
+    .secondary-btn {
+      flex: 1;
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      background: var(--denim);
+      color: var(--white);
+      font-size: 17px;
+      font-weight: 850;
+    }
+
+    .secondary-btn.light {
+      background: var(--powder-blue);
+      color: var(--denim);
+    }
+
+    .secondary-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 0.75fr 1.25fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .score-box {
+      padding: 32px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(145deg, var(--cerulean), var(--denim));
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 260px;
+    }
+
+    .score-value {
+      font-size: 82px;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .score-text {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .result-description {
+      padding: 32px;
+      border-radius: var(--radius-xl);
+      background: var(--white);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .result-description h2 {
+      color: var(--cerulean);
+      margin-bottom: 14px;
+    }
+
+    .result-description p {
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    .warning {
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+      background: #fff4d8;
+      font-weight: 750;
+      margin-top: 16px;
+    }
+
+    .contacts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 16px;
+    }
+
+    .contact-card {
+      padding: 20px;
+      border-radius: var(--radius-md);
+      background: var(--eggshell);
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    .contact-card p,
+    .contact-card a {
+      font-family: Inter, Arial, sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--denim);
+    }
+
+    .contact-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--cerulean);
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+    }
+
+    a {
+      color: var(--denim);
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    .footer-note {
+      margin-top: 22px;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 860px) {
+      .app {
+        padding: 14px;
+      }
+
+      .topbar {
+        padding: 18px;
+        margin-bottom: 16px;
+      }
+
+      .pill {
+        display: none;
+      }
+
+      .hero,
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 28px 22px;
+      }
+
+      .stat-card {
+        min-height: auto;
+      }
+
+      .steps,
+      .contacts {
+        grid-template-columns: 1fr;
+      }
+
+      .section,
+      .test-card,
+      .result-description,
+      .score-box {
+        padding: 22px;
+      }
+
+      .primary-btn {
+        padding: 20px;
+        font-size: 20px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="topbar-title">Шкала депресії Бека</div>
+      <div class="pill">21 питання · 5–10 хв</div>
+    </header>
+
+    <section id="homeScreen" class="home-screen">
+      <div class="hero">
+        <div>
+          <h1>Шкала депресії Бека</h1>
+          <p>Короткий тест для самостійної оцінки емоційного стану та рівня депресивних симптомів.</p>
+          <div class="notice">
+            <span>ⓘ</span>
+            <span>Тест не є медичним діагнозом і не замінює консультацію спеціаліста.</span>
+          </div>
+        </div>
+
+        <aside class="stat-card">
+          <div class="stat-number">21</div>
+          <div class="stat-label">питання</div>
+          <div class="stat-line"></div>
+          <div class="stat-label">5–10 хв</div>
+          <p>приблизний час проходження</p>
+        </aside>
+      </div>
+
+      <button class="primary-btn" onclick="startTest()">Почати тест</button>
+    </section>
+
+    <section id="testScreen" class="test-screen">
+      <div class="test-card">
+        <div class="progress-wrap">
+          <div class="progress-info">
+            <span id="questionCounter">Питання 1 / 21</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+        </div>
+
+        <h2 id="questionTitle" class="question-title"></h2>
+        <div id="answers" class="answers"></div>
+
+        <div class="nav-buttons">
+          <button id="backBtn" class="secondary-btn light" onclick="prevQuestion()">Назад</button>
+          <button id="nextBtn" class="secondary-btn" onclick="nextQuestion()">Далі</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="resultScreen" class="result-screen">
+      <div class="result-grid">
+        <div class="score-box">
+          <div id="scoreValue" class="score-value">0</div>
+          <div class="score-text">балів</div>
+        </div>
+
+        <div class="result-description">
+          <h2 id="resultTitle"></h2>
+          <p id="resultText"></p>
+          <p>Результат тесту варто сприймати як орієнтир для самоспостереження, а не як остаточний висновок про стан здоров’я.</p>
+          <div id="riskWarning" class="warning" style="display:none;">
+            Якщо у вас є думки про самопошкодження або суїцид, зверніться по термінову допомогу: зателефонуйте 103 або 112, зверніться до близької людини чи спеціаліста.
+          </div>
+        </div>
+      </div>
+
+      <section class="section">
+        <h2>Контакти</h2>
+        <p><strong>Вараський центр соціальних служб та послуг</strong></p>
+        <div class="contacts">
+          <div class="contact-card">
+            <span class="contact-label">Адреса</span>
+            <p>34400, м. Вараш,<br>м-р Будівельників, 3</p>
+          </div>
+          <div class="contact-card">
+            <span class="contact-label">Телефон</span>
+            <a href="tel:+380978855233">+380978855233</a>
+          </div>
+          <div class="contact-card">
+            <span class="contact-label">E-mail</span>
+            <a href="mailto:css@varashmtg.gov.ua">css@varashmtg.gov.ua</a>
+          </div>
+        </div>
+        <p class="footer-note">У разі сильного погіршення стану або небезпеки для себе чи інших не відкладайте звернення по допомогу.</p>
+      </section>
+
+      <button class="primary-btn" onclick="restartTest()">Пройти ще раз</button>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        title: "1. Стан настрою",
+        answers: [
+          "Мені не сумно.",
+          "Мені сумно, я чуюсь пригніченим.",
+          "Я увесь час чуюсь сумним, пригніченим і не можу відволіктись від цього стану.",
+          "Я відчуваю нестерпний сум та тугу."
+        ]
+      },
+      {
+        title: "2. Ставлення до майбутнього",
+        answers: [
+          "Я спокійно думаю про майбутнє.",
+          "Думки про майбутнє викликають в мені страх та тривогу.",
+          "Мені нема чого чекати від майбутнього і на що надіятися.",
+          "Я відчуваю, що в моєму майбутньому нема нічого доброго і я нічого не можу змінити."
+        ]
+      },
+      {
+        title: "3. Відчуття успішності",
+        answers: [
+          "Я не відчуваю себе невдахою.",
+          "Я відчуваю, що в мене більше невдач, ніж у інших людей.",
+          "Моє життя — це суцільна низка невдач та помилок.",
+          "Я абсолютний невдаха в усьому."
+        ]
+      },
+      {
+        title: "4. Задоволення від занять",
+        answers: [
+          "Я отримую задоволення від улюблених занять і речей.",
+          "Я не отримую такого задоволення, як раніше, від улюблених занять та речей.",
+          "Я ні від чого не отримую задоволення.",
+          "Будь-яке заняття викликає в мені нудьгу та тугу."
+        ]
+      },
+      {
+        title: "5. Відчуття провини",
+        answers: [
+          "Я не відчуваю провини.",
+          "Я доволі часто відчуваю провину.",
+          "Я дуже часто чуюсь поганою людиною і мене мучить відчуття провини.",
+          "Мене мучить постійне відчуття провини."
+        ]
+      },
+      {
+        title: "6. Відчуття покарання",
+        answers: [
+          "Я не вважаю, що заслуговую покарання.",
+          "Я допускаю, що заслуговую покарання.",
+          "Я вважаю, що маю бути покараний.",
+          "Я відчуваю, що доля карає мене."
+        ]
+      },
+      {
+        title: "7. Ставлення до себе",
+        answers: [
+          "Я в основному задоволений тим, ким я є.",
+          "Я незадоволений собою.",
+          "Я гидкий собі.",
+          "Я ненавиджу себе."
+        ]
+      },
+      {
+        title: "8. Самокритика",
+        answers: [
+          "Я не думаю, що я гірший, ніж інші люди.",
+          "Я критикую себе за слабкості та помилки.",
+          "Я постійно докоряю собі за різні помилки.",
+          "Я докоряю собі за усе погане, що діється навколо."
+        ]
+      },
+      {
+        title: "9. Суїцидальні думки",
+        answers: [
+          "У мене не виникає думок про самогубство.",
+          "У мене бувають думки про самогубство, але я знаю, що не зроблю цього.",
+          "Я хочу вмерти і планую самогубство.",
+          "Якщо б була нагода, я б зробив самогубство."
+        ]
+      },
+      {
+        title: "10. Плач",
+        answers: [
+          "Я не плачу більш часто, ніж звичайно.",
+          "Я плачу частіше, ніж звичайно.",
+          "Я увесь час плачу.",
+          "Раніше я часто плакав, але тепер не можу заплакати навіть тоді, коли мені цього хочеться."
+        ]
+      },
+      {
+        title: "11. Роздратування",
+        answers: [
+          "Я не дратуюсь частіше, ніж звичайно.",
+          "Я дратуюся легше, ніж звичайно.",
+          "Я постійно відчуваю роздратування та почуття внутрішнього незадоволення.",
+          "Те, що раніше дратувало мене, тепер мені стало байдуже."
+        ]
+      },
+      {
+        title: "12. Інтерес до людей",
+        answers: [
+          "Я не втратив цікавості до людей.",
+          "Люди цікавлять мене менше, ніж раніше.",
+          "Я майже повністю втратив інтерес до людей.",
+          "Люди мені глибоко байдужі."
+        ]
+      },
+      {
+        title: "13. Прийняття рішень",
+        answers: [
+          "Мені не є важче, ніж звичайно, приймати рішення.",
+          "Тепер частіше, ніж раніше, я зволікаю з прийняттям рішень.",
+          "Мені дуже важко прийняти будь-яке рішення.",
+          "Я не в стані приймати жодних рішень."
+        ]
+      },
+      {
+        title: "14. Сприйняття зовнішності",
+        answers: [
+          "Я не вважаю, що виглядаю гірше, ніж звичайно.",
+          "Мене турбує, що я виглядаю дещо гірше, ніж звичайно, і старшим, ніж на свій вік.",
+          "Я відчуваю, що з кожним днем виглядаю усе гірше.",
+          "Я переконаний, що виглядаю жахливо."
+        ]
+      },
+      {
+        title: "15. Працездатність",
+        answers: [
+          "Мені працюється так, як і раніше.",
+          "Тепер мені часто доводиться змушувати себе братися до праці.",
+          "Я з великою трудністю змушую себе взятися до праці.",
+          "Я не в стані працювати."
+        ]
+      },
+      {
+        title: "16. Сон",
+        answers: [
+          "Я сплю не менше і не гірше, ніж раніше.",
+          "Я сплю гірше, ніж раніше.",
+          "Я буджуся на 1–2 години раніше, ніж звичайно, і мені важко знову заснути.",
+          "Я буджуся на декілька годин раніше, ніж звичайно, і вже не можу заснути."
+        ]
+      },
+      {
+        title: "17. Втома",
+        answers: [
+          "Я не втомлююся більше, ніж звичайно.",
+          "Я втомлююся значно легше, ніж раніше.",
+          "Я втомлююся від будь-якого заняття.",
+          "Я чуюся настільки втомленим, що не в стані будь-чим займатися."
+        ]
+      },
+      {
+        title: "18. Апетит",
+        answers: [
+          "У мене нормальний апетит.",
+          "У мене погіршився апетит.",
+          "У мене майже відсутній апетит.",
+          "У мене зовсім нема апетиту."
+        ]
+      },
+      {
+        title: "19. Вага",
+        answers: [
+          "Моя вага залишається незмінною.",
+          "За останній час я схуд більше ніж на 3 кг.",
+          "За останній час я схуд більше ніж на 5 кг.",
+          "За останній час я схуд більше ніж на 7 кг."
+        ]
+      },
+      {
+        title: "20. Тілесне здоров’я",
+        answers: [
+          "Моє тілесне здоров’я є добре.",
+          "Мене турбують наявні у мене фізичні симптоми.",
+          "Я дуже занепокоєний наявними в мене фізичними симптомами.",
+          "Я настільки занепокоєний станом свого тілесного здоров’я, що практично не можу думати ні про що інше."
+        ]
+      },
+      {
+        title: "21. Інтерес до статевого життя",
+        answers: [
+          "Мій інтерес до статевого життя за останній час не зменшився.",
+          "Статеве життя мене цікавить зараз менше, ніж звичайно.",
+          "Мій інтерес до статевого життя значно зменшився.",
+          "Я повністю втратив інтерес до статевого життя."
+        ]
+      }
+    ];
+
+    let currentQuestion = 0;
+    let userAnswers = Array(questions.length).fill(null);
+
+    const homeScreen = document.getElementById("homeScreen");
+    const testScreen = document.getElementById("testScreen");
+    const resultScreen = document.getElementById("resultScreen");
+    const questionTitle = document.getElementById("questionTitle");
+    const answersBox = document.getElementById("answers");
+    const questionCounter = document.getElementById("questionCounter");
+    const progressPercent = document.getElementById("progressPercent");
+    const progressFill = document.getElementById("progressFill");
+    const backBtn = document.getElementById("backBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function startTest() {
+      homeScreen.style.display = "none";
+      resultScreen.style.display = "none";
+      testScreen.style.display = "block";
+      currentQuestion = 0;
+      userAnswers = Array(questions.length).fill(null);
+      renderQuestion();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderQuestion() {
+      const question = questions[currentQuestion];
+      questionTitle.textContent = question.title;
+      answersBox.innerHTML = "";
+
+      question.answers.forEach((answer, index) => {
+        const button = document.createElement("button");
+        button.className = "answer-btn";
+        button.textContent = answer;
+        button.onclick = () => selectAnswer(index);
+
+        if (userAnswers[currentQuestion] === index) {
+          button.classList.add("selected");
+        }
+
+        answersBox.appendChild(button);
+      });
+
+      const answeredCount = userAnswers.filter(answer => answer !== null).length;
+      const progress = Math.round((answeredCount / questions.length) * 100);
+
+      questionCounter.textContent = `Питання ${currentQuestion + 1} / ${questions.length}`;
+      progressPercent.textContent = `${progress}%`;
+      progressFill.style.width = `${progress}%`;
+
+      backBtn.disabled = currentQuestion === 0;
+      nextBtn.textContent = currentQuestion === questions.length - 1 ? "Показати результат" : "Далі";
+    }
+
+    function selectAnswer(score) {
+      userAnswers[currentQuestion] = score;
+      renderQuestion();
+    }
+
+    function nextQuestion() {
+      if (userAnswers[currentQuestion] === null) {
+        alert("Оберіть один варіант відповіді, щоб продовжити.");
+        return;
+      }
+
+      if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        renderQuestion();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        showResult();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuestion();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function showResult() {
+      const totalScore = userAnswers.reduce((sum, score) => sum + score, 0);
+      const result = getResult(totalScore);
+      const suicideQuestionScore = userAnswers[8];
+
+      testScreen.style.display = "none";
+      resultScreen.style.display = "block";
+
+      document.getElementById("scoreValue").textContent = totalScore;
+      document.getElementById("resultTitle").textContent = result.title;
+      document.getElementById("resultText").textContent = result.text;
+
+      document.getElementById("riskWarning").style.display = suicideQuestionScore >= 2 ? "block" : "none";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function getResult(score) {
+      if (score <= 9) {
+        return {
+          title: "Відсутність або мінімальна депресія",
+          text: "Результат перебуває в межах норми або свідчить про мінімальні прояви депресивних симптомів. Варто й надалі звертати увагу на свій емоційний стан, сон, рівень втоми та загальне самопочуття."
+        };
+      }
+
+      if (score <= 15) {
+        return {
+          title: "Субдепресія",
+          text: "Результат може свідчити про емоційний дискомфорт, знижений настрій, втому або внутрішнє напруження. Це не є діагнозом, але може бути приводом уважніше поставитися до свого стану."
+        };
+      }
+
+      if (score <= 19) {
+        return {
+          title: "Легка депресія",
+          text: "Результат може вказувати на наявність вираженіших депресивних симптомів, які вже можуть впливати на повсякденне життя, мотивацію, сон або концентрацію. За можливості варто звернутися до психолога, психотерапевта або сімейного лікаря."
+        };
+      }
+
+      if (score <= 29) {
+        return {
+          title: "Помірна депресія",
+          text: "Результат може свідчити про суттєвий вплив симптомів на емоційний стан і повсякденне функціонування. Рекомендовано не залишатися з цим наодинці та звернутися по професійну допомогу."
+        };
+      }
+
+      return {
+        title: "Важка депресія",
+        text: "Результат може вказувати на значний рівень депресивних симптомів. Важливо звернутися по професійну допомогу якомога швидше, особливо якщо є думки про самопошкодження або втрату сенсу життя."
+      };
+    }
+
+    function restartTest() {
+      resultScreen.style.display = "none";
+      homeScreen.style.display = "block";
+      userAnswers = Array(questions.length).fill(null);
+      currentQuestion = 0;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+</body>
+</html>
